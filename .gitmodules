@@ -1,0 +1,3 @@
+[submodule "briefing-src"]
+	path = briefing-src
+	url = git@github.com:louiscklaw/briefing.git
