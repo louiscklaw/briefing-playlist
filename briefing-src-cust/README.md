@@ -19,7 +19,7 @@ npm run start
 
 ## Batteries included
 
-A WebRTC video chat application requires multiple components to work properly. Briefing includes everything you need to get started: User Interface, Signaling and STUN. 
+A WebRTC video chat application requires multiple components to work properly. Briefing includes everything you need to get started: User Interface, Signaling and STUN.
 
 Learn more about it in the [**→ documentation**](./docs/README.md).
 

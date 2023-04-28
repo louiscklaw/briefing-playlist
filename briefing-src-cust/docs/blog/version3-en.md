@@ -27,4 +27,4 @@ The standard library [vue-i18n](https://vue-i18n.intlify.dev/) is now used for t
 The base of Briefing is solid. The next steps will be to expand frequently requested functionalities.
 
 **The code is available as open source as before at <https://github.com/holtwick/briefing/> and the app for free use at <https://brie.fi/ng>.**
- 
+

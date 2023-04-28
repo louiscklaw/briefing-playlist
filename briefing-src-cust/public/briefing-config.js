@@ -2,4 +2,4 @@
 
 // Visit https://github.com/holtwick/briefing/ for more details.
 
-window.briefingConfig = {}
+window.briefingConfig = {};

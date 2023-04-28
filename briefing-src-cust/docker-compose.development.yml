@@ -1,6 +1,5 @@
-# Please read https://github.com/holtwick/briefing/blob/master/docs/docker.md for proper use of Docker
-
-version: '3'
+# Please read https://github.com/holtwick/briefing/blob/master/docs/docker.md
+# for proper use of Docker
 
 services:
   briefing:
@@ -12,8 +11,9 @@ services:
       - ./data:/app/data
     env_file:
       - docker-zerva.env
-
-networks:
-  default:
-    external:
-      name: proxy
+    ports:
+      - 8080:8080
+# networks:
+#   default:
+#     external:
+#       name: proxy

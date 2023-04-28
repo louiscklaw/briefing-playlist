@@ -8,7 +8,7 @@ export default {
       required: true,
     },
   },
-}
+};
 </script>
 
 <template>

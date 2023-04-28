@@ -1,4 +1,4 @@
-# User Interface Configuration 
+# User Interface Configuration
 
 All settings are **optional**! By default standard values are used.
 
@@ -17,7 +17,7 @@ If used in a [static website](installation/website.md) these values go into the 
 By default Briefing comes with STUN build in. But if also TURN is required, the installation of [coturn.md](installation/coturn.md) is recommended.
 
 - `SIGNAL_URL`: Signal server, default is the same as the web site URL. Example: `wss://example.com`
-- `STUN_URL`: TURN server to be used. Please set up your own, if you expect heavy traffic.  Example: `stun:turn01.brie.fi:5349` 
+- `STUN_URL`: TURN server to be used. Please set up your own, if you expect heavy traffic. Example: `stun:turn01.brie.fi:5349`
 - `TURN_URL`: STUN server to be used. Please set up your own, if you expect heavy traffic. See [coturn.md](installation/coturn.md). Example: `turn:turn01.brie.fi:5349`
 - `TURN_USER`: Username
 - `TURN_PASSWORD`: Password

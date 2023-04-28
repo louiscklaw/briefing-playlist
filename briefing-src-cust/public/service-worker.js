@@ -1,12 +1,12 @@
-console.info('Unregister previous service workers')
+console.info('Unregister previous service workers');
 
 try {
   self.addEventListener('install', () => {
     // Skip over the "waiting" lifecycle state, to ensure that our
     // new service worker is activated immediately, even if there's
     // another tab open controlled by our older service worker code.
-    self.skipWaiting()
-  })
+    self.skipWaiting();
+  });
 
   self.addEventListener('activate', () => {
     // Optional: Get a list of all the current open windows/tabs under
@@ -17,41 +17,41 @@ try {
       .matchAll({
         type: 'window',
       })
-      .then((windowClients) => {
-        windowClients.forEach((windowClient) => {
-          windowClient.navigate(windowClient.url)
-        })
-      })
-  })
+      .then(windowClients => {
+        windowClients.forEach(windowClient => {
+          windowClient.navigate(windowClient.url);
+        });
+      });
+  });
 
   self.addEventListener('activate', function (e) {
     self.registration
       .unregister()
       .then(function () {
-        return self.clients.matchAll()
+        return self.clients.matchAll();
       })
       .then(function (clients) {
-        clients.forEach((client) => client.navigate(client.url))
-      })
-  })
+        clients.forEach(client => client.navigate(client.url));
+      });
+  });
 } catch (err) {
-  console.error('Activate failed', err)
+  console.error('Activate failed', err);
 }
 
 try {
   caches.keys().then(function (names) {
-    for (let name of names) caches.delete(name)
-  })
+    for (let name of names) caches.delete(name);
+  });
 } catch (err) {
-  console.error('Cache delete failed', err)
+  console.error('Cache delete failed', err);
 }
 
 try {
   navigator.serviceWorker.getRegistrations().then(function (registrations) {
     for (let registration of registrations) {
-      registration.unregister()
+      registration.unregister();
     }
-  })
+  });
 } catch (err) {
-  console.error('Unregistering failed', err)
+  console.error('Unregistering failed', err);
 }

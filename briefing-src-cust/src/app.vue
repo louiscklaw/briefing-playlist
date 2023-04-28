@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppMain from './components/app-main.vue'
-import AppWhitelabel from './components/app-whitelabel.vue'
-import AppEmbed from './product/app-embed.vue'
-import AppWelcome from './product/app-welcome.vue'
-import { state } from './state'
+import AppMain from './components/app-main.vue';
+import AppWhitelabel from './components/app-whitelabel.vue';
+import AppEmbed from './product/app-embed.vue';
+import AppWelcome from './product/app-welcome.vue';
+import { state } from './state';
 
-import './css/index.scss'
+import './css/index.scss';
 </script>
 
 <template>

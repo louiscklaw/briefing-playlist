@@ -1,9 +1,9 @@
 <script lang="ts">
-import { Logger } from 'zeed'
-import { trackSilentException } from '../bugs'
-import { state } from '../state'
+import { Logger } from 'zeed';
+import { trackSilentException } from '../bugs';
+import { state } from '../state';
 
-const log = Logger('app:app-peer')
+const log = Logger('app:app-peer');
 
 export default {
   name: 'AppVideo',
@@ -43,11 +43,11 @@ export default {
       showCode: false,
       showPlayButton: false,
       state,
-    }
+    };
   },
   watch: {
     stream(value) {
-      this.doConnectStream(value)
+      this.doConnectStream(value);
     },
   },
   async mounted() {
@@ -55,76 +55,66 @@ export default {
     //   await this.$nextTick()
     //   await this.doConnectStream(this.stream)
     // })
-    if (this.stream)
-      await this.doConnectStream(this.stream)
+    if (this.stream) await this.doConnectStream(this.stream);
   },
   methods: {
     playVideo(video) {
-      const startPlayPromise = video.play()
-      log('play', startPlayPromise)
+      const startPlayPromise = video.play();
+      log('play', startPlayPromise);
       if (startPlayPromise !== undefined) {
         startPlayPromise
           .then(() => {
             // Start whatever you need to do only after playback
             // has begun.
           })
-          .catch((error) => {
-            if (error.name === 'NotAllowedError')
-              this.showPlayButton = true
-            else
-              trackSilentException(error)
-          })
+          .catch(error => {
+            if (error.name === 'NotAllowedError') this.showPlayButton = true;
+            else trackSilentException(error);
+          });
       }
     },
     async doConnectStream(stream) {
-      log('doConnectStream', this.title, stream)
+      log('doConnectStream', this.title, stream);
       if (stream) {
         try {
-          await this.$nextTick()
+          await this.$nextTick();
 
-          const video = this.$refs.video
-          log('connectStreamToVideoElement', stream, video)
+          const video = this.$refs.video;
+          log('connectStreamToVideoElement', stream, video);
           if (stream) {
-            if ('srcObject' in video)
-              video.srcObject = stream
-            else
-              video.src = window.URL.createObjectURL(stream) // for older browsers
+            if ('srcObject' in video) video.srcObject = stream;
+            else video.src = window.URL.createObjectURL(stream); // for older browsers
 
             // Keep in mind https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
             // But if the user allows to access camera it should be fine
             // https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
-            video.onloadedmetadata = () => this.playVideo(video)
-            video.onloadeddata = () => this.playVideo(video)
+            video.onloadedmetadata = () => this.playVideo(video);
+            video.onloadeddata = () => this.playVideo(video);
           }
-        }
-        catch (err) {
-          trackSilentException(err)
+        } catch (err) {
+          trackSilentException(err);
         }
       }
     },
     handleClick() {
-      if (this.showPlayButton)
-        this.doPlay()
-      else if (state.maximized === this.id)
-        state.maximized = ''
-      else
-        state.maximized = this.id
+      if (this.showPlayButton) this.doPlay();
+      else if (state.maximized === this.id) state.maximized = '';
+      else state.maximized = this.id;
     },
     doToggleShow() {
-      this.showCode = !this.showCode
+      this.showCode = !this.showCode;
     },
     async doPlay() {
       try {
-        log('force play manually')
-        this.$refs?.video?.play()
-        this.showPlayButton = false
-      }
-      catch (err) {
-        trackSilentException(err)
+        log('force play manually');
+        this.$refs?.video?.play();
+        this.showPlayButton = false;
+      } catch (err) {
+        trackSilentException(err);
       }
     },
   },
-}
+};
 </script>
 
 <template>
@@ -203,7 +193,7 @@ export default {
       >
         If the person you see here confirms to see the same ID, you are securely
         connected:
-        <br>
+        <br />
         <code>{{ fingerprint }}</code>
       </label>
       <label

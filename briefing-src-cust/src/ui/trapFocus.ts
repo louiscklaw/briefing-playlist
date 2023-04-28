@@ -1,6 +1,5 @@
 const findFocusable = (element: HTMLElement): HTMLElement[] => {
-  if (!element)
-    return []
+  if (!element) return [];
 
   return Array.from(
     element.querySelectorAll(
@@ -18,45 +17,42 @@ const findFocusable = (element: HTMLElement): HTMLElement[] => {
     *[contenteditable]
     `.trim(),
     ) || [],
-  )
-}
+  );
+};
 
-let onKeyDown: any
+let onKeyDown: any;
 
 const bind = (el: HTMLElement, { value = true }) => {
   if (value && el) {
     onKeyDown = (event: KeyboardEvent) => {
-      const focusable: HTMLElement[] = findFocusable(el)
-      const currentFocus = document.querySelector(':focus')
-      let index = focusable.findIndex((f: Node) => f.isSameNode(currentFocus))
-      const length = focusable.length
+      const focusable: HTMLElement[] = findFocusable(el);
+      const currentFocus = document.querySelector(':focus');
+      let index = focusable.findIndex((f: Node) => f.isSameNode(currentFocus));
+      const length = focusable.length;
 
       if (event.key === 'Tab') {
-        event.preventDefault()
+        event.preventDefault();
         if (!event.shiftKey) {
-          ++index
-          if (index >= length)
-            index = 0
+          ++index;
+          if (index >= length) index = 0;
+        } else {
+          --index;
+          if (index <= 0) index = length - 1;
         }
-        else {
-          --index
-          if (index <= 0)
-            index = length - 1
-        }
-        focusable[index].focus()
+        focusable[index].focus();
       }
-    }
-    el.addEventListener('keydown', onKeyDown)
+    };
+    el.addEventListener('keydown', onKeyDown);
   }
-}
+};
 
 const unbind = (el: HTMLElement) => {
-  el?.removeEventListener('keydown', onKeyDown)
-}
+  el?.removeEventListener('keydown', onKeyDown);
+};
 
 const directive = {
   beforeMount: bind,
   unMount: unbind,
-}
+};
 
-export default directive
+export default directive;

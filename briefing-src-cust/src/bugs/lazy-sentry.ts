@@ -1,8 +1,8 @@
-import * as Sentry from '@sentry/browser'
-import { BrowserTracing } from '@sentry/tracing'
-import { RELEASE } from '../config'
+import * as Sentry from '@sentry/browser';
+import { BrowserTracing } from '@sentry/tracing';
+import { RELEASE } from '../config';
 
-window.sentry = Sentry
+window.sentry = Sentry;
 
 export function setupSentry({ dsn }: any = {}) {
   Sentry.init({
@@ -18,5 +18,5 @@ export function setupSentry({ dsn }: any = {}) {
     //   // console.log("ev", event)
     //   return event
     // },
-  })
+  });
 }

@@ -1347,7 +1347,7 @@ export const ADJECTIVES = [
   'zesty',
   'zigzag',
   'rocky',
-]
+];
 export const NOUNS = [
   'people',
   'history',
@@ -2850,4 +2850,4 @@ export const NOUNS = [
   'Thomas',
   'Tom',
   'Lieuwe',
-]
+];

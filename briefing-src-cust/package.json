@@ -33,7 +33,8 @@
     "test": "vitest",
     "upload:dockerhub": "nr build:docker && cd docker && docker login -u holtwick && docker buildx build --platform linux/arm64,linux/amd64,linux/s390x,linux/arm/v7,linux/arm/v6 -t holtwick/briefing:$npm_package_version -t holtwick/briefing:latest --push .",
     "watch_build": "npx nodemon --watch src --ext \"vue,js,ts,css,scss\" --exec \"npm run build:basis\"",
-    "watch_bs": "browser-sync start --proxy \"localhost:8080\"  --files \"www/*.*\""
+    "watch_bs": "browser-sync start --proxy \"localhost:8080\"  --files \"www/*.*\"",
+    "prettier": "prettier -w ."
   },
   "dependencies": {
     "@sentry/browser": "^7.41.0",

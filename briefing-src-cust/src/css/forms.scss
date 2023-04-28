@@ -611,12 +611,12 @@ input {
 // --switch-bg-active: var(--primary-color, #007ed9);
 // --switch-knob-color: #ffffff;
 
-.form-switch {  
+.form-switch {
   $control-boolean-height: px(16);
   $control-boolean-width: px(32);
   $control-boolean-margin: px(1);
 
-  --control-inner:  rgba(141, 141, 141, 1);
+  --control-inner: rgba(141, 141, 141, 1);
   --control-color: var(--primary-color, #007ed9);
   --control-hover: var(--primary-color, #007ed9);
   --control-active: var(--primary-color, #007ed9);
@@ -647,12 +647,13 @@ input {
   transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
 
   &:after {
-    content: "";
+    content: '';
     display: block;
     left: 0;
     top: 0;
     position: absolute;
-    transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);
+    transition: transform var(--d-t, 0.3s) var(--d-t-e, ease),
+      opacity var(--d-o, 0.2s);
   }
 
   &:checked {
@@ -692,8 +693,8 @@ input {
 
     /* Workaround for :focus that otherwise stays after mouse click */
     &:not(:focus-visible, :active) {
-      box-shadow: unquote("inherit");
-      border-color: unquote("inherit");
+      box-shadow: unquote('inherit');
+      border-color: unquote('inherit');
     }
   }
 
@@ -704,11 +705,12 @@ input {
     cursor: pointer;
   }
 
-  height: $control-boolean-height;  
+  height: $control-boolean-height;
   width: $control-boolean-width;
   border-radius: 999px;
 
-  &:after { // knob
+  &:after {
+    // knob
     left: $control-boolean-margin;
     top: $control-boolean-margin;
     border-radius: 50%;
@@ -718,13 +720,14 @@ input {
     transform: translateX(var(--x, 0));
   }
 
-  --ab: white; 
-  
+  --ab: white;
+
   &:checked {
     // --ab: var(--active-inner);
-    --x: #{ $control-boolean-width - $control-boolean-height - $control-boolean-margin };
+    --x: #{$control-boolean-width - $control-boolean-height -
+      $control-boolean-margin};
   }
- 
+
   &:disabled {
     &:not(:checked) {
       &:after {

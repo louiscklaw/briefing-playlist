@@ -1,90 +1,101 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { reactive } from 'vue'
-import { Logger } from 'zeed'
-import { trackException, trackSilentException } from './bugs'
-import { MUTE_AUDIO, MUTE_VIDEO, ROOM_PATH, SHOW_CHAT, SHOW_FULLSCREEN, SHOW_INVITATION, SHOW_INVITATION_HINT, SHOW_SETTINGS, SHOW_SHARE } from './config'
-import { isTrue, objectSnapshot } from './lib/base'
-import { postMessageToParent } from './lib/iframe'
-import { messages } from './lib/messages'
-import { normalizeName } from './lib/names'
-import { setupWebRTC } from './logic/connection'
-import { defaultAudioConstraints, defaultVideoConstraints, getDevices, getDisplayMedia, getUserMedia, setAudioTracks } from './logic/stream'
+import { reactive } from 'vue';
+import { Logger } from 'zeed';
+import { trackException, trackSilentException } from './bugs';
+import {
+  MUTE_AUDIO,
+  MUTE_VIDEO,
+  ROOM_PATH,
+  SHOW_CHAT,
+  SHOW_FULLSCREEN,
+  SHOW_INVITATION,
+  SHOW_INVITATION_HINT,
+  SHOW_SETTINGS,
+  SHOW_SHARE,
+} from './config';
+import { isTrue, objectSnapshot } from './lib/base';
+import { postMessageToParent } from './lib/iframe';
+import { messages } from './lib/messages';
+import { normalizeName } from './lib/names';
+import { setupWebRTC } from './logic/connection';
+import {
+  defaultAudioConstraints,
+  defaultVideoConstraints,
+  getDevices,
+  getDisplayMedia,
+  getUserMedia,
+  setAudioTracks,
+} from './logic/stream';
 
-const log = Logger('app:state')
+const log = Logger('app:state');
 
-const screenshots = false
+const screenshots = false;
 
 // ROOM
 
-const isOriginalBriefing = ROOM_PATH === '/ng/'
+const isOriginalBriefing = ROOM_PATH === '/ng/';
 
 function getRoomByCurrentLocation() {
-  const pathname = location.pathname
-  log('getRoomByCurrentLocation', pathname)
+  const pathname = location.pathname;
+  log('getRoomByCurrentLocation', pathname);
   if (isOriginalBriefing) {
-    const m = /^\/ngs?\/(.*?)$/gi.exec(pathname)
-    return m && m[1]
-  }
-  else {
+    const m = /^\/ngs?\/(.*?)$/gi.exec(pathname);
+    return m && m[1];
+  } else {
     if (pathname.startsWith(ROOM_PATH))
-      return pathname.substr(ROOM_PATH.length)
+      return pathname.substr(ROOM_PATH.length);
   }
 }
 
-let room = getRoomByCurrentLocation()
+let room = getRoomByCurrentLocation();
 
-const hash = location.hash.slice(1)
-if (hash)
-  room = normalizeName(hash)
+const hash = location.hash.slice(1);
+if (hash) room = normalizeName(hash);
 
-log.info('Room =', room)
+log.info('Room =', room);
 
 // Normalize URL matching to room
 try {
   if (hash) {
-    history.pushState(null, null, ROOM_PATH + room)
-  }
-  else {
-    const pathname = location.pathname
+    history.pushState(null, null, ROOM_PATH + room);
+  } else {
+    const pathname = location.pathname;
     if (
-      pathname === '/'
-    || room === ''
-    || room === null
-    || (isOriginalBriefing && room === '/ng')
+      pathname === '/' ||
+      room === '' ||
+      room === null ||
+      (isOriginalBriefing && room === '/ng')
     ) {
-      room = null
-      history.pushState(null, null, isOriginalBriefing ? '/ng' : '/')
-    }
-    else {
-      const newRoom = normalizeName(room)
+      room = null;
+      history.pushState(null, null, isOriginalBriefing ? '/ng' : '/');
+    } else {
+      const newRoom = normalizeName(room);
       if (room !== newRoom) {
-        room = newRoom
-        history.pushState(null, null, ROOM_PATH + newRoom)
+        room = newRoom;
+        history.pushState(null, null, ROOM_PATH + newRoom);
       }
     }
   }
-}
-catch (err) {
-  trackSilentException(err)
+} catch (err) {
+  trackSilentException(err);
 }
 
 // Track URL changes and fix room
-window.addEventListener('popstate', (event) => {
-  state.room = getRoomByCurrentLocation()
-  log('popstate', state.room, event)
-})
+window.addEventListener('popstate', event => {
+  state.room = getRoomByCurrentLocation();
+  log('popstate', state.room, event);
+});
 
 // Hack to avoid more complex routing for now ;)
-const embedDemo = room === 'embed-demo'
-if (embedDemo)
-  room = null
+const embedDemo = room === 'embed-demo';
+if (embedDemo) room = null;
 
-log.info('Room =', room, 'Embed Demo =', embedDemo)
+log.info('Room =', room, 'Embed Demo =', embedDemo);
 
 // STATE
 
-const urlParams = new URLSearchParams(window.location.search)
+const urlParams = new URLSearchParams(window.location.search);
 
 export const state = reactive({
   // ID of this room
@@ -140,167 +151,159 @@ export const state = reactive({
   // Future
   blur: false,
   subscribe: false,
-})
+});
 
-messages.on('requestBugTracking', _ => (state.requestBugTracking = true))
+messages.on('requestBugTracking', _ => (state.requestBugTracking = true));
 
-messages.on('updateStream', updateStream)
+messages.on('updateStream', updateStream);
 
 function updateStream() {
   try {
     if (state.stream) {
       state.stream
         ?.getVideoTracks()
-        .forEach(t => (t.enabled = !state?.muteVideo))
+        .forEach(t => (t.enabled = !state?.muteVideo));
       state.stream
         ?.getAudioTracks()
-        .forEach(t => (t.enabled = !state?.muteAudio))
+        .forEach(t => (t.enabled = !state?.muteAudio));
     }
-  }
-  catch (err) {
-    trackException(err)
+  } catch (err) {
+    trackException(err);
   }
 }
 
-messages.on('switchMedia', switchMedia)
+messages.on('switchMedia', switchMedia);
 
 async function switchMedia() {
   // See following links for detail:
   // https://github.com/holtwick/briefing/pull/131
   // https://stackoverflow.com/questions/55953038/why-is-the-ended-event-not-firing-for-this-mediastreamtrack/55960232#55960232
 
-  state.stream?.getTracks().forEach((track) => {
+  state.stream?.getTracks().forEach(track => {
     if (typeof track.stop === 'function' && track.readyState !== 'ended') {
-      track.stop()
+      track.stop();
       // Manually emit the event, some webview implement doesn't fire it
-      const trackStoppedEvt = new MediaStreamTrackEvent('ended', { track })
-      track.dispatchEvent(trackStoppedEvt)
+      const trackStoppedEvt = new MediaStreamTrackEvent('ended', { track });
+      track.dispatchEvent(trackStoppedEvt);
     }
-  })
+  });
 
   const audio = {
     ...defaultAudioConstraints,
-  } as MediaTrackConstraints
+  } as MediaTrackConstraints;
 
-  if (state.deviceAudio)
-    audio.deviceId = state.deviceAudio
+  if (state.deviceAudio) audio.deviceId = state.deviceAudio;
 
   const video = {
     ...defaultVideoConstraints,
-  } as MediaTrackConstraints
+  } as MediaTrackConstraints;
 
-  if (state.deviceVideo)
-    video.deviceId = state.deviceVideo
+  if (state.deviceVideo) video.deviceId = state.deviceVideo;
 
   const constraints: MediaStreamConstraints = {
     audio,
     video,
-  }
+  };
 
-  let stream, desktopStream
-  const showsDesktop = state.deviceVideo === 'desktop'
+  let stream, desktopStream;
+  const showsDesktop = state.deviceVideo === 'desktop';
 
   if (showsDesktop) {
-    const { stream } = await getDisplayMedia()
+    const { stream } = await getDisplayMedia();
     if (stream) {
-      desktopStream = stream
-      delete constraints.video
+      desktopStream = stream;
+      delete constraints.video;
     }
   }
 
-  const media = await getUserMedia(constraints)
-  state.error = media.error
-  stream = media.stream
+  const media = await getUserMedia(constraints);
+  state.error = media.error;
+  stream = media.stream;
 
-  log('Stream', stream, constraints)
+  log('Stream', stream, constraints);
   if (stream) {
-    let success = true
+    let success = true;
 
-    const audioTracks = stream.getAudioTracks()
+    const audioTracks = stream.getAudioTracks();
     if (state.deviceAudio && audioTracks?.length <= 0) {
-      state.deviceAudio = null
-      success = false
+      state.deviceAudio = null;
+      success = false;
     }
 
     if (desktopStream) {
-      setAudioTracks(desktopStream, audioTracks)
+      setAudioTracks(desktopStream, audioTracks);
 
-      stream = desktopStream
+      stream = desktopStream;
     }
 
-    const videoTracks = stream.getVideoTracks()
+    const videoTracks = stream.getVideoTracks();
     if (state.deviceVideo && videoTracks?.length <= 0) {
-      state.deviceVideo = null
-      success = false
+      state.deviceVideo = null;
+      success = false;
     }
 
     // Reset to defaults
-    if (!success)
-      await switchMedia()
-  }
-  else {
-    log.error('Media error:', media.error)
+    if (!success) await switchMedia();
+  } else {
+    log.error('Media error:', media.error);
   }
 
-  state.stream = stream
-  updateStream()
-  messages.emit('setLocalStream', state.stream)
+  state.stream = stream;
+  updateStream();
+  messages.emit('setLocalStream', state.stream);
 }
 
 export async function setup() {
-  log('Setup state')
-  let rtc
+  log('Setup state');
+  let rtc;
   try {
-    rtc = await setupWebRTC(state)
+    rtc = await setupWebRTC(state);
 
     if (!rtc) {
       // eslint-disable-next-line no-alert
       alert(
         'Your browser does not support the required WebRTC technologies.\n\nPlease reconnect using an up to date web browser.\n\nThanks for your understanding.',
-      )
-      location.assign(ROOM_PATH)
-      return
+      );
+      location.assign(ROOM_PATH);
+      return;
     }
 
-    const { stream, error } = await getUserMedia()
-    state.error = error
+    const { stream, error } = await getUserMedia();
+    state.error = error;
     if (stream) {
       // Safari getDevices only works immediately after getUserMedia (bug)
-      state.devices = ((await getDevices()) || []).map((d) => {
-        log('found device', d)
+      state.devices = ((await getDevices()) || []).map(d => {
+        log('found device', d);
         return {
           kind: d?.kind?.toLowerCase() || '?',
           deviceId: d?.deviceId,
           label: d.label || 'Unknown name',
-        }
-      })
-    }
-    else {
-      log.error('Media error', error)
+        };
+      });
+    } else {
+      log.error('Media error', error);
     }
 
-    state.stream = stream
-    updateStream()
-    messages.emit('setLocalStream', state.stream)
+    state.stream = stream;
+    updateStream();
+    messages.emit('setLocalStream', state.stream);
 
-    if (!state.backgroundMode)
-      setTimeout(switchMedia, 250)
-  }
-  catch (err) {
-    trackException(err)
+    if (!state.backgroundMode) setTimeout(switchMedia, 250);
+  } catch (err) {
+    trackException(err);
   }
 
   return {
     cleanup() {
-      rtc?.cleanup()
+      rtc?.cleanup();
     },
-  }
+  };
 }
 
 // Communicate to parent
 
-let lastUpdateSnapshot = ''
-let counter = 0
+let lastUpdateSnapshot = '';
+let counter = 0;
 
 export function postUpdateToIframeParent() {
   setTimeout(() => {
@@ -320,17 +323,16 @@ export function postUpdateToIframeParent() {
         muteVideo: state.muteVideo,
         muteAudio: state.muteAudio,
         maximized: state.maximized,
-      }
-      const snapshot = objectSnapshot(update)
+      };
+      const snapshot = objectSnapshot(update);
       // log.log("snapshot", snapshot)
       if (snapshot !== lastUpdateSnapshot) {
-        lastUpdateSnapshot = snapshot
-        update.counter = counter++
-        postMessageToParent('status', update)
+        lastUpdateSnapshot = snapshot;
+        update.counter = counter++;
+        postMessageToParent('status', update);
       }
+    } catch (err) {
+      log.error(err);
     }
-    catch (err) {
-      log.error(err)
-    }
-  }, 0)
+  }, 0);
 }

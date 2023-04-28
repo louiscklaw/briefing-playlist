@@ -1,3 +1,3 @@
-import { Emitter } from 'zeed'
+import { Emitter } from 'zeed';
 
-export const messages = new Emitter()
+export const messages = new Emitter();

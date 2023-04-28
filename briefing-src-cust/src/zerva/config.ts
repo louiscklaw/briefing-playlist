@@ -1,25 +1,29 @@
-import { on } from '@zerva/core'
-import '@zerva/websocket'
-import { Logger } from 'zeed'
+import { on } from '@zerva/core';
+import '@zerva/websocket';
+import { Logger } from 'zeed';
 
-const log = Logger('config')
+const log = Logger('config');
 
 export function useConfig() {
-  log('setup')
+  log('setup');
 
-  const options = {}
+  const options = {};
   for (const [key, value] of Object.entries(process.env)) {
     if (key.startsWith('BRIEFING_')) {
-      log.debug(`${key} = "${value}"`)
-      options[key.slice(9)] = value
+      log.debug(`${key} = "${value}"`);
+      options[key.slice(9)] = value;
     }
   }
 
-  const configText = `window.briefingConfig = ${JSON.stringify(options, null, 2)}`
+  const configText = `window.briefingConfig = ${JSON.stringify(
+    options,
+    null,
+    2,
+  )}`;
 
-  log.info(`Dynamic config for the frontend:\n\n${configText}`)
+  log.info(`Dynamic config for the frontend:\n\n${configText}`);
 
   on('httpInit', ({ get }) => {
-    get('/briefing-config.js', () => configText)
-  })
+    get('/briefing-config.js', () => configText);
+  });
 }

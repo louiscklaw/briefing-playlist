@@ -19,7 +19,7 @@ npm run start
 
 ## Alles enthalten
 
-Eine WebRTC-Videochat-Anwendung benötigt mehrere Komponenten, um richtig zu funktionieren. Briefing enthält alles, was Sie für den Start benötigen: Benutzeroberfläche, Signalisierung und STUN. 
+Eine WebRTC-Videochat-Anwendung benötigt mehrere Komponenten, um richtig zu funktionieren. Briefing enthält alles, was Sie für den Start benötigen: Benutzeroberfläche, Signalisierung und STUN.
 
 Erfahre mehr darüber in der [**→ Dokumentation**](./docs/README.md).
 
@@ -62,7 +62,6 @@ Beiträge sind immer willkommen. Am besten fängst du an [Issues](https://github
 
 Um Übersetzungen hinzuzufügen oder zu korrigieren, starte hier: [→ locales](locales/).
 
-
 ## Hauptversionen
 
 ### Version 3.0
@@ -76,5 +75,3 @@ Einführung von Typescript-Unterstützung. Umstellung auf Vite. Ersetzen von soc
 ### Version 1.0
 
 Basierte auf Webpack und hatte Beispiele für iOS, Android, Windows und Electron sowie einen separaten Signal-Server. Sie bot auch Hintergrundunschärfe und Bildhintergründe über Unsplash. Alle diese Implementierungen sind mittlerweile veraltet. Der Code ist jedoch weiterhin über den [legacy branch](https://github.com/holtwick/briefing/tree/legacy) zugänglich, wird aber nicht mehr gepflegt oder unterstützt.
-
- 

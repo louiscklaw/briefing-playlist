@@ -1,22 +1,21 @@
 // https://webrtchacks.com/limit-webrtc-bandwidth-sdp/
 
-import { Logger, useDispose } from 'zeed'
-import { ICE_CONFIG } from '../config'
-import { cloneObject } from '../lib/base'
-import { messages } from '../lib/messages'
-import { WebRTC } from './webrtc'
+import { Logger, useDispose } from 'zeed';
+import { ICE_CONFIG } from '../config';
+import { cloneObject } from '../lib/base';
+import { messages } from '../lib/messages';
+import { WebRTC } from './webrtc';
 
 // import { removeBandwidthRestriction, setMediaBitrate } from './sdp-manipulation'
 
-const log = Logger('app:connection')
+const log = Logger('app:connection');
 
 export async function setupWebRTC(state) {
-  if (!WebRTC.isSupported())
-    return null
+  if (!WebRTC.isSupported()) return null;
 
-  const dispose = useDispose(log)
+  const dispose = useDispose(log);
 
-  const config = ICE_CONFIG
+  const config = ICE_CONFIG;
 
   const webrtc = new WebRTC({
     room: state.room,
@@ -39,66 +38,73 @@ export async function setupWebRTC(state) {
       // },
       config,
     },
-  })
+  });
 
-  dispose.add(webrtc)
+  dispose.add(webrtc);
 
-  webrtc.on('status', (info) => {
-    log('status', info.status)
+  webrtc.on('status', info => {
+    log('status', info.status);
     // hack somehow Vue doesn't like the real WebRtcPeer object any more
-    const status = info.status.map((p) => {
-      const pp = cloneObject(p)
-      pp.peer.stream = p.peer.stream
-      return pp
-    })
-    state.status = status
-  })
+    const status = info.status.map(p => {
+      const pp = cloneObject(p);
+      pp.peer.stream = p.peer.stream;
+      return pp;
+    });
+    state.status = status;
+  });
 
   webrtc.on('connected', ({ peer }) => {
-    log('connected', peer)
-    if (state.stream)
-      peer.setStream(state.stream)
+    log('connected', peer);
+    if (state.stream) peer.setStream(state.stream);
 
-    messages.emit('requestUserInfo')
-  })
+    messages.emit('requestUserInfo');
+  });
 
   // Getting Client's Info with Local Peer Info
   webrtc.on('userInfoWithPeer', ({ peer, data }) => {
-    webrtc.send('userInfoUpdate', { peer, data })
-  })
+    webrtc.send('userInfoUpdate', { peer, data });
+  });
 
   // Listening to Remote Client's Info with its Local Peer Info and
   // emitting to Local Client
   webrtc.on('userInfoUpdate', ({ peer, data }) => {
-    messages.emit('userInfoUpdate', { peer, data })
-  })
+    messages.emit('userInfoUpdate', { peer, data });
+  });
 
   // Listening to new messages from Remote Client and emitting to Local client
-  webrtc.on('chatMessage', (info) => {
-    messages.emit('newMessage', info)
-  })
+  webrtc.on('chatMessage', info => {
+    messages.emit('newMessage', info);
+  });
 
-  dispose.add(messages.on('setLocalStream', (stream) => {
-    webrtc.forEachPeer((peer) => {
-      peer.setStream(stream)
-    })
-  }))
+  dispose.add(
+    messages.on('setLocalStream', stream => {
+      webrtc.forEachPeer(peer => {
+        peer.setStream(stream);
+      });
+    }),
+  );
 
-  dispose.add(messages.on('negotiateBandwidth', (_stream) => {
-    webrtc.forEachPeer((peer) => {
-      peer.peer.negotiate()
-    })
-  }))
+  dispose.add(
+    messages.on('negotiateBandwidth', _stream => {
+      webrtc.forEachPeer(peer => {
+        peer.peer.negotiate();
+      });
+    }),
+  );
 
   // Send a new message to all peers
-  dispose.add(messages.on('chatMessage', ({ name, message, time }) => {
-    webrtc.send('chatMessage', { name, message, time })
-  }))
+  dispose.add(
+    messages.on('chatMessage', ({ name, message, time }) => {
+      webrtc.send('chatMessage', { name, message, time });
+    }),
+  );
 
   // Listen to local userInfo and emit to webrtc for getting peer info
-  dispose.add(messages.on('userInfo', (data) => {
-    webrtc.emit('userInfo', { data })
-  }))
+  dispose.add(
+    messages.on('userInfo', data => {
+      webrtc.emit('userInfo', { data });
+    }),
+  );
 
   // dispose.add(messages.on('subscribePush', async (_on) => {
   //   const add = state.subscription
@@ -166,5 +172,5 @@ export async function setupWebRTC(state) {
   return {
     webrtc,
     dispose,
-  }
+  };
 }

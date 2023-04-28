@@ -1,15 +1,15 @@
 <script lang="ts">
-import { setAllowedBugTracking } from '../bugs'
-import { ROOM_PATH } from '../config'
-import { historyAddRoom } from '../lib/history'
-import { messages } from '../lib/messages'
-import { createLinkForRoom, shareLink } from '../lib/share'
-import { setup, state } from '../state'
-import SeaModal from '../ui/sea-modal.vue'
-import AppChat from './app-chat.vue'
-import AppSettings from './app-settings.vue'
-import AppShare from './app-share.vue'
-import AppVideo from './app-video.vue'
+import { setAllowedBugTracking } from '../bugs';
+import { ROOM_PATH } from '../config';
+import { historyAddRoom } from '../lib/history';
+import { messages } from '../lib/messages';
+import { createLinkForRoom, shareLink } from '../lib/share';
+import { setup, state } from '../state';
+import SeaModal from '../ui/sea-modal.vue';
+import AppChat from './app-chat.vue';
+import AppSettings from './app-settings.vue';
+import AppShare from './app-share.vue';
+import AppVideo from './app-video.vue';
 
 export default {
   name: 'AppMain',
@@ -35,121 +35,114 @@ export default {
       name: '',
       unreadMessages: false,
       state,
-    }
+    };
   },
   computed: {
     hasPeers() {
-      return Object.keys(state.status).length > 0
+      return Object.keys(state.status).length > 0;
     },
     peers() {
-      return state.screenshots ? [2, 3] : state.status
+      return state.screenshots ? [2, 3] : state.status;
     },
     videoAllowed() {
-      if (window.webkit != null)
-        return this.mode === ''
-      return true
+      if (window.webkit != null) return this.mode === '';
+      return true;
     },
   },
   mounted() {
-    this.setName()
-    this.triggerChatFunctions()
+    this.setName();
+    this.triggerChatFunctions();
 
     setTimeout(async () => {
-      this.conn = await setup()
-    }, 50)
+      this.conn = await setup();
+    }, 50);
     if (!this.hasPeers && !window.iPhone && state.showInviteOnStart)
-      this.mode = 'share'
+      this.mode = 'share';
 
     this.fullscreenHandler = () => {
-      this.isFullScreen = !!document.fullscreenElement
-    }
-    document.addEventListener('fullscreenchange', this.fullscreenHandler)
+      this.isFullScreen = !!document.fullscreenElement;
+    };
+    document.addEventListener('fullscreenchange', this.fullscreenHandler);
 
     // Remember room name for next visits
-    historyAddRoom(state.room)
+    historyAddRoom(state.room);
   },
   beforeUnmount() {
-    document.removeEventListener('fullscreenchange', this.fullscreenHandler)
-    this.conn?.cleanup()
+    document.removeEventListener('fullscreenchange', this.fullscreenHandler);
+    this.conn?.cleanup();
   },
   methods: {
     doShare() {
-      shareLink(createLinkForRoom(state.room))
+      shareLink(createLinkForRoom(state.room));
     },
     doVideo() {
-      state.muteVideo = !state.muteVideo
-      messages.emit('updateStream')
+      state.muteVideo = !state.muteVideo;
+      messages.emit('updateStream');
     },
     doAudio() {
-      state.muteAudio = !state.muteAudio
-      messages.emit('updateStream')
+      state.muteAudio = !state.muteAudio;
+      messages.emit('updateStream');
     },
     doQuit() {
       // eslint-disable-next-line no-alert
-      if (confirm('Really quit this session?'))
-        location.assign(ROOM_PATH)
+      if (confirm('Really quit this session?')) location.assign(ROOM_PATH);
     },
     doReload() {
-      location.reload()
+      location.reload();
     },
     doAllow(allow) {
-      if (allow)
-        setAllowedBugTracking(allow)
+      if (allow) setAllowedBugTracking(allow);
 
-      state.requestBugTracking = false
+      state.requestBugTracking = false;
     },
     doToggleFullScreen() {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-      }
-      else {
-        if (document.exitFullscreen)
-          document.exitFullscreen()
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
       }
     },
     doTogglePanel(mode = 'settings') {
-      this.mode = (!mode || this.mode === mode) ? '' : mode
+      this.mode = !mode || this.mode === mode ? '' : mode;
     },
     didChangeFullscreen() {},
     toggleChat() {
       if (this.mode === 'chat') {
-        this.mode = ''
-      }
-      else {
-        this.unreadMessages = false
-        this.mode = 'chat'
-        this.focusChatInput()
+        this.mode = '';
+      } else {
+        this.unreadMessages = false;
+        this.mode = 'chat';
+        this.focusChatInput();
       }
     },
     updateUserInfo() {
       messages.emit('userInfo', {
         name: this.name,
-      })
+      });
     },
     triggerChatFunctions() {
       messages.on('newMessage', () => {
-        if (this.mode !== 'chat')
-          this.unreadMessages = true
-      })
+        if (this.mode !== 'chat') this.unreadMessages = true;
+      });
 
       messages.on('userInfoUpdate', ({ peer, data }) => {
         this.peers[
           this.peers.findIndex(el => el.remote === peer.local)
-        ].peer.name = data.data.name
-      })
+        ].peer.name = data.data.name;
+      });
 
       // Update Local Name to Remote peers every 10 seconds for new peers
       messages.on('requestUserInfo', () => {
-        this.updateUserInfo()
-      })
+        this.updateUserInfo();
+      });
     },
     setName() {
-      const name = localStorage.getItem('name')
+      const name = localStorage.getItem('name');
       if (name) {
-        this.name = name
+        this.name = name;
         messages.emit('userInfo', {
           name,
-        })
+        });
       }
     },
     focusChatInput() {
@@ -157,12 +150,12 @@ export default {
         !/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
       ) {
         setTimeout(() => {
-          document.getElementById('message-input')?.focus()
-        }, 100)
+          document.getElementById('message-input')?.focus();
+        }, 100);
       }
     },
   },
-}
+};
 </script>
 
 <template>
@@ -223,17 +216,14 @@ export default {
 
         <div
           v-else-if="
-            !hasPeers
-              && !state.screenshots
-              && mode !== 'share'
-              && state.showInviteHint
+            !hasPeers &&
+            !state.screenshots &&
+            mode !== 'share' &&
+            state.showInviteHint
           "
           class="message-container"
         >
-          <div
-            class="message"
-            v-html="$t('share.message', { symbol })"
-          />
+          <div class="message" v-html="$t('share.message', { symbol })" />
         </div>
       </div>
 
@@ -339,9 +329,7 @@ export default {
               <path
                 d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"
               />
-              <path
-                d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"
-              />
+              <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
               <line x1="12" y1="19" x2="12" y2="23" />
               <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
@@ -356,9 +344,7 @@ export default {
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <path
-                d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
-              />
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
               <line x1="12" y1="19" x2="12" y2="23" />
               <line x1="8" y1="23" x2="16" y2="23" />

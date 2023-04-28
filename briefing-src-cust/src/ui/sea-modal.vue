@@ -1,11 +1,11 @@
 <script>
-import { Logger } from 'zeed'
-import trapFocus from './trapFocus'
-import { removeElement } from './helpers'
+import { Logger } from 'zeed';
+import trapFocus from './trapFocus';
+import { removeElement } from './helpers';
 
-import './sea-modal.scss'
+import './sea-modal.scss';
 
-const log = Logger('ui:sea-modal')
+const log = Logger('ui:sea-modal');
 
 export default {
   name: 'SeaModal',
@@ -42,59 +42,58 @@ export default {
     onCancel: {
       type: Function,
       default: () => {
-        log('onCancel not defined')
+        log('onCancel not defined');
       },
     },
   },
   created() {
-    document?.addEventListener('keyup', this.keyPress)
+    document?.addEventListener('keyup', this.keyPress);
   },
   beforeMount() {
     // Insert the Dialog component in the element container
     if (this.standalone && typeof window !== 'undefined') {
       this.$nextTick(() => {
-        const container
-        /* document.querySelector(this.container) || */ = document.body
-        container.appendChild(this.$el)
-      })
+        const container =
+          /* document.querySelector(this.container) || */ document.body;
+        container.appendChild(this.$el);
+      });
     }
   },
   beforeUnmount() {
     if (typeof window !== 'undefined')
-      document?.removeEventListener('keyup', this.keyPress)
-      // reset scroll
-      // document?.documentElement.classList.remove('is-clipped')
+      document?.removeEventListener('keyup', this.keyPress);
+    // reset scroll
+    // document?.documentElement.classList.remove('is-clipped')
   },
   methods: {
     doCancel(...args) {
-      log('do cancel')
-      this.$emit('cancel')
-      const onCancel = this?.$parent?.onCancel || this?.onCancel
-      if (onCancel)
-        onCancel(...args)
-      this.doClose()
+      log('do cancel');
+      this.$emit('cancel');
+      const onCancel = this?.$parent?.onCancel || this?.onCancel;
+      if (onCancel) onCancel(...args);
+      this.doClose();
     },
     doClose() {
-      this.$emit('close', false)
-      this.$emit('update:active', false)
+      this.$emit('close', false);
+      this.$emit('update:active', false);
 
       if (this.standalone) {
         // Timeout for the animation complete before destroying
         setTimeout(() => {
           // this.active = false
-          this.$destroy()
-          removeElement(this.$el)
-        }, 150)
+          this.$destroy();
+          removeElement(this.$el);
+        }, 150);
       }
     },
     keyPress(event) {
       if (this.active && event.keyCode === 27) {
         // Esc key
-        this.doCancel('escape')
+        this.doCancel('escape');
       }
     },
   },
-}
+};
 </script>
 
 <template>

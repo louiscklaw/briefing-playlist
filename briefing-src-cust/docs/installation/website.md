@@ -1,6 +1,6 @@
 # Static Website
 
-If you are fine with using brie.fi/ng Signaling and STUN you may also just host the HTML, CSS and JS files of the project. 
+If you are fine with using brie.fi/ng Signaling and STUN you may also just host the HTML, CSS and JS files of the project.
 
 Run the following to build the website data:
 
@@ -18,8 +18,8 @@ Example
 ```js
 window.briefingConfig = {
   ROOM_URL: 'https://example.com/room/',
-  ROOM_PATH: '/room/'
-}
+  ROOM_PATH: '/room/',
+};
 ```
 
 Now copy this folder to your hosting service.
