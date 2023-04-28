@@ -4,14 +4,16 @@ version: '3'
 
 services:
   briefing:
-    image: holtwick/briefing
+    # image: holtwick/briefing
+    build:
+      context: .
     restart: always
     volumes:
       - ./data:/app/data
     ports:
-      - 8080:8080
+      - 8888:8080
 
-# networks:
-#   default:
-#     external:
-#       name: proxy
+networks:
+  default:
+    external:
+      name: traefik-proxy-network
