@@ -2,8 +2,8 @@
 
 ```bash
 
-# start briefing-src , consume port 8080
-cd briefing-src
+# start briefing-src-cust, consume port 8080
+cd briefing-src-cust
   ./dev.sh
 cd ..
 # then browse http://localhost:8080/
