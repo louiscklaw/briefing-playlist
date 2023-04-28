@@ -12,6 +12,7 @@ services:
       - ./data:/app/data
     ports:
       - 8888:8080
+    command: ./entry.sh
 
 networks:
   default:
