@@ -2,6 +2,7 @@
 
 set -ex
 
+npm run clean
 npm run build
 
 docker compose pull
