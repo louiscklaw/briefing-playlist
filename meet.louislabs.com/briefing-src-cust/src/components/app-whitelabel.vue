@@ -62,7 +62,7 @@ export default {
       const room = this.room || this.defaultName || '';
 
       axios
-        .get(`//localhost:3000/meetingRequest/r/${room}`)
+        .get(`https://meetapi.louislabs.com/meetingRequest/r/${room}`)
         .then(res => res.data)
         .then(res_data => {
           window.history.pushState(

@@ -2,6 +2,12 @@
 
 set -x
 
+pushd briefing-src-cust
+  npm i -D
+  ./build.sh
+
+popd
+
 docker network create traefik-proxy-network
 
 set -ex
