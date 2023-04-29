@@ -1,3 +1,5 @@
+// https://github.com/holtwick/briefing/blob/master/docs/configuration.md
+
 import { getWebsocketUrlFromLocation } from '@zerva/websocket';
 import { Logger, isValue } from 'zeed';
 import { isTrue } from './lib/base';
@@ -107,7 +109,7 @@ export const SHOW_SHARE = isTrue(getConfig('SHOW_SHARE'), true);
 export const SHOW_CHAT = isTrue(getConfig('SHOW_CHAT'), true);
 
 export const MUTE_AUDIO = isTrue(getConfig('MUTE_AUDIO'), false);
-export const MUTE_VIDEO = isTrue(getConfig('MUTE_VIDEO'), false);
+export const MUTE_VIDEO = isTrue(getConfig('MUTE_VIDEO'), true);
 
 export const DEFAULT_ROOM = getConfig('DEFAULT_ROOM');
 

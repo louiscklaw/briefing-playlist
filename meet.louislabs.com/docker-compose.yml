@@ -53,16 +53,6 @@ services:
     env_file:
       - ./.env
 
-    environment:
-      - MUTE_VIDEO=1
-      - MUTE_AUDIO=0
-      - SHOW_FULLSCREEN=1
-      - SHOW_INVITATION=1
-      - SHOW_INVITATION_HINT=1
-      - SHOW_SETTINGS=1
-      - SHOW_SHARE=1
-      - SHOW_CHAT=1
-
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.meet-louislabs-http.rule=Host(`meet.louislabs.com`)'
