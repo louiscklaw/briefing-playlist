@@ -510,11 +510,9 @@ export class Peer extends Emitter<{
       this._pc.removeTrack(sender);
     } catch (err: any) {
       if (err.name === 'NS_ERROR_UNEXPECTED')
-        this._sendersAwaitingStable.push(
-          sender,
-        ); 
-        // HACK: Firefox must wait until (signalingState === stable) 
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1133874
+        this._sendersAwaitingStable.push(sender);
+      // HACK: Firefox must wait until (signalingState === stable)
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1133874
       else this.destroy(errCode(err, 'ERR_REMOVE_TRACK'));
     }
     this._needsNegotiation();

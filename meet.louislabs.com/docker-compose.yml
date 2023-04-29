@@ -55,8 +55,6 @@ services:
     env_file:
       - ./express-src/.env
     command: './entry.sh'
-
-
 # networks:
 #   default:
 #     external:
