@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -x
+
+docker network create traefik-proxy-network
+
 set -ex
 
 docker compose kill

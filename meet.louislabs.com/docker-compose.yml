@@ -1,15 +1,57 @@
 # Please read https://github.com/holtwick/briefing/blob/master/docs/docker.md for proper use of Docker
 
 services:
+  mongodb:
+    image: docker.io/bitnami/mongodb:5.0
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  express:
+    image: docker.io/bitnami/express:4
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - DATABASE_URL=mongodb://mongodb:27017/myapp
+      - EXPRESS_SKIP_DB_WAIT=0
+      - EXPRESS_SKIP_DB_MIGRATION=0
+      - EXPRESS_SKIP_NPM_INSTALL=0
+      - EXPRESS_SKIP_BOWER_INSTALL=0
+    volumes:
+      - './express-src:/app'
+    depends_on:
+      - mongodb
+    env_file:
+      - ./.env
+    command: './entry.sh'
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.meetapi-louislabs-http.rule=Host(`meetapi.louislabs.com`)'
+      - 'traefik.http.routers.meetapi-louislabs-http.entrypoints=web'
+      - 'traefik.http.routers.meetapi-louislabs-http.middlewares=meetapi-https'
+      - 'traefik.http.middlewares.meetapi-louislabs-https.redirectscheme.scheme=https'
+      - 'traefik.http.routers.meetapi-louislabs-https.rule=Host(`meetapi.louislabs.com`)'
+      - 'traefik.http.routers.meetapi-louislabs-https.entrypoints=websecure'
+      - 'traefik.http.routers.meetapi-louislabs-https.tls.certresolver=myresolver'
+      - 'traefik.http.services.meetapi-louislabs-https.loadbalancer.server.port=8080'
+
+
   briefing:
     build: ./briefing-src-cust
     restart: always
-    env_file:
-      - ./briefing-src-cust/docker-zerva.env
+
     ports:
       - 8080:8080
     working_dir: /app
     command: ./entry.sh
+
+    env_file:
+      - ./.env
+
     environment:
       - MUTE_VIDEO=1
       - MUTE_AUDIO=0
@@ -31,31 +73,10 @@ services:
       - 'traefik.http.routers.meet-louislabs-https.tls.certresolver=myresolver'
       - 'traefik.http.services.meet-louislabs-https.loadbalancer.server.port=8080'
 
-  mongodb:
-    image: docker.io/bitnami/mongodb:5.0
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-
-  express:
-    image: docker.io/bitnami/express:4
-    ports:
-      - '3000:3000'
-    environment:
-      - PORT=3000
-      - NODE_ENV=development
-      - DATABASE_URL=mongodb://mongodb:27017/myapp
-      - EXPRESS_SKIP_DB_WAIT=0
-      - EXPRESS_SKIP_DB_MIGRATION=0
-      - EXPRESS_SKIP_NPM_INSTALL=0
-      - EXPRESS_SKIP_BOWER_INSTALL=0
-    volumes:
-      - './express-src:/app'
     depends_on:
-      - mongodb
-    env_file:
-      - ./express-src/.env
-    command: './entry.sh'
-# networks:
-#   default:
-#     external:
-#       name: traefik-proxy-network
+      - express
+
+networks:
+  default:
+    external:
+      name: traefik-proxy-network
