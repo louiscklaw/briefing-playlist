@@ -1,0 +1,13 @@
+{
+  "name": "meet.louislabs.com",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gitUpdate":"git add . && git commit -m \"update meet.louislabs.com\" && git push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

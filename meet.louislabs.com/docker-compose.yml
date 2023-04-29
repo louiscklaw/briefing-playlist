@@ -1,0 +1,62 @@
+# Please read https://github.com/holtwick/briefing/blob/master/docs/docker.md for proper use of Docker
+
+services:
+  briefing:
+    build: ./briefing-src-cust
+    restart: always
+    env_file:
+      - ./briefing-src-cust/docker-zerva.env
+    ports:
+      - 8080:8080
+    working_dir: /app
+    command: ./entry.sh
+    environment:
+      - MUTE_VIDEO=1
+      - MUTE_AUDIO=0
+      - SHOW_FULLSCREEN=1
+      - SHOW_INVITATION=1
+      - SHOW_INVITATION_HINT=1
+      - SHOW_SETTINGS=1
+      - SHOW_SHARE=1
+      - SHOW_CHAT=1
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.meet-louislabs-http.rule=Host(`meet.louislabs.com`)'
+      - 'traefik.http.routers.meet-louislabs-http.entrypoints=web'
+      - 'traefik.http.routers.meet-louislabs-http.middlewares=meet-https'
+      - 'traefik.http.middlewares.meet-louislabs-https.redirectscheme.scheme=https'
+      - 'traefik.http.routers.meet-louislabs-https.rule=Host(`meet.louislabs.com`)'
+      - 'traefik.http.routers.meet-louislabs-https.entrypoints=websecure'
+      - 'traefik.http.routers.meet-louislabs-https.tls.certresolver=myresolver'
+      - 'traefik.http.services.meet-louislabs-https.loadbalancer.server.port=8080'
+
+  mongodb:
+    image: docker.io/bitnami/mongodb:5.0
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  express:
+    image: docker.io/bitnami/express:4
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=mongodb://mongodb:27017/myapp
+  #     - EXPRESS_SKIP_DB_WAIT=0
+  #     - EXPRESS_SKIP_DB_MIGRATION=0
+  #     - EXPRESS_SKIP_NPM_INSTALL=0
+  #     - EXPRESS_SKIP_BOWER_INSTALL=0
+  #   volumes:
+  #     - '../express-src:/app'
+  #   depends_on:
+  #     - mongodb
+  #   env_file:
+  #     - ../express-src/.env
+
+
+# networks:
+#   default:
+#     external:
+#       name: traefik-proxy-network

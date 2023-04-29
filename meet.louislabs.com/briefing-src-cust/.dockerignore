@@ -1,0 +1,6 @@
+.github
+.out*
+.pnpm*
+*.local
+*.log
+node_modules

@@ -1,0 +1,24 @@
+# Please read https://github.com/holtwick/briefing/blob/master/docs/docker.md
+# for proper use of Docker
+
+services:
+  briefing:
+    build: .
+    restart: always
+    env_file:
+      - docker-zerva.env
+    ports:
+      - 8080:8080
+    working_dir: /app
+    command: ./entry.sh
+
+    # volumes:
+    #   - ./dist:/app/dist
+    #   - ./www:/app/www
+    #   - ./data:/app/data
+    #   - ./src:/app/src
+
+# networks:
+#   default:
+#     external:
+#       name: proxy
