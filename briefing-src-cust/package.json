@@ -23,7 +23,7 @@
     "build:basis": "nr clean && zerva build src/zerva/index.ts && vite build --mode $MODE",
     "build:docker": "cross-env MODE=production-docker nr build:basis && ./scripts/make-docker.sh",
     "check": "vue-tsc --noEmit -p ./tsconfig.json",
-    "clean": "rm -rf dist www",
+    "clean": "rm -rf dist/* www/*",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",

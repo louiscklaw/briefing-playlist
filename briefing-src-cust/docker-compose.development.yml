@@ -5,14 +5,19 @@ services:
   briefing:
     build: .
     restart: always
-    volumes:
-      - ./dist:/app/dist
-      - ./www:/app/www
-      - ./data:/app/data
     env_file:
       - docker-zerva.env
     ports:
       - 8080:8080
+    working_dir: /app
+    command: ./entry.sh
+
+    # volumes:
+    #   - ./dist:/app/dist
+    #   - ./www:/app/www
+    #   - ./data:/app/data
+    #   - ./src:/app/src
+
 # networks:
 #   default:
 #     external:

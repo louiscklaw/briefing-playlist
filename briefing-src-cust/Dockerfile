@@ -1,16 +1,23 @@
 # Please read https://github.com/holtwick/briefing/blob/master/docs/installation/docker.md for proper use of Docker
 
-FROM node:18-alpine
+FROM node:18-buster
 
 COPY . /app
 
-# COPY docker-package.json /app/package.json
-WORKDIR /app
+# # COPY docker-package.json /app/package.json
+# WORKDIR /app
 
-# RUN cd /app && npm install --omit=dev
-CMD ["node", "dist/main.cjs"]
+RUN cd /app && \
+  npm install
 
-EXPOSE 8080
+  # && \
+# #   npm run build:basis
+# # RUN "cd /app && npm run build:basic"
 
-# STUN
-EXPOSE 3478
+# # # RUN cd /app && npm install --omit=dev
+# # CMD ["node", "dist/main.cjs"]
+
+# # EXPOSE 8080
+
+# # # STUN
+# # EXPOSE 3478
