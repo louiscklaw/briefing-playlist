@@ -58,4 +58,19 @@ router.get('/r/:roomId', function (req, res, next) {
   }
 });
 
+router.post('/r/:roomId', function (req, res, next) {
+  try {
+    // var { roomId } = req.params;
+
+    // sendTelegramMessage({ roomId });
+
+    console.log('hello post request')
+
+    res.send(JSON.stringify({ result: 'done' }));
+
+  } catch (error) {
+    res.send(JSON.stringify({result:'error during send message'}))
+  }
+});
+
 module.exports = router;
