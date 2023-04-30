@@ -14,9 +14,11 @@ incoming meeting request !
 
 __MEET_BASEURL__/__roomId__
 
+__comments__
+
 `.strip()
 
-function sendTelegramMessage({ roomId }) {
+function sendTelegramMessage({ roomId, comments="" }) {
   try {
     console.log('sendTelegramMessage');
     console.log({
@@ -31,6 +33,8 @@ function sendTelegramMessage({ roomId }) {
       MESSAGE_TEMPLATE
         .replace('__MEET_BASEURL__', MEET_BASEURL)
         .replace('__roomId__', roomId)
+        .replace('__comments__', comments)
+        .strip()
       );
   } catch (error) {
     console.log(error)
