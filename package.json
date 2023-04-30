@@ -20,6 +20,5 @@
   },
   "homepage": "https://github.com/louiscklaw/briefing-playlist#readme",
   "devDependencies": {
-    "prettier": "^2.8.8"
   }
 }
