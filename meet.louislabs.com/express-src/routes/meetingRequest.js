@@ -16,7 +16,7 @@ __MEET_BASEURL__/__roomId__
 
 __comments__
 
-`.strip()
+`.trim()
 
 function sendTelegramMessage({ roomId, comments="" }) {
   try {
@@ -34,7 +34,7 @@ function sendTelegramMessage({ roomId, comments="" }) {
         .replace('__MEET_BASEURL__', MEET_BASEURL)
         .replace('__roomId__', roomId)
         .replace('__comments__', comments)
-        .strip()
+        .trim()
       );
   } catch (error) {
     console.log(error)
