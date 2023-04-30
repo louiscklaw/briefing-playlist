@@ -9,6 +9,8 @@ let MEET_BASEURL = process.env.MEET_BASEURL;
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 
+const ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST = 'ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST'
+
 const MESSAGE_TEMPLATE=`
 incoming meeting request !
 
@@ -60,16 +62,22 @@ router.get('/r/:roomId', function (req, res, next) {
 
 router.post('/r/:roomId', function (req, res, next) {
   try {
-    // var { roomId } = req.params;
+    if (Object.keys(req.body).indexOf('comments') > -1) {
+      var {comments} = req.body;
 
-    // sendTelegramMessage({ roomId });
+      sendTelegramMessage({ roomId, comments });
 
-    console.log('hello post request')
-
-    res.send(JSON.stringify({ result: 'done' }));
+      res.send(JSON.stringify({ result: 'done' }));
+    } else{
+      throw ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST
+    }
 
   } catch (error) {
-    res.send(JSON.stringify({result:'error during send message'}))
+    if (error == ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST){
+      res.send(JSON.stringify({result:'cannot find comments in post request'}))
+    }else{
+      res.send(JSON.stringify({result:'error during send message'}))
+    }
   }
 });
 
