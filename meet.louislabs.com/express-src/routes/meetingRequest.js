@@ -76,6 +76,7 @@ router.post('/r/:roomId', function (req, res, next) {
     if (error == ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST){
       res.send(JSON.stringify({result:'cannot find comments in post request'}))
     }else{
+      console.log(error)
       res.send(JSON.stringify({result:'error during send message'}))
     }
   }
