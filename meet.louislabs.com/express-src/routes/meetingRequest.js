@@ -63,6 +63,7 @@ router.get('/r/:roomId', function (req, res, next) {
 router.post('/r/:roomId', function (req, res, next) {
   try {
     if (Object.keys(req.body).indexOf('comments') > -1) {
+      var { roomId } = req.params;
       var {comments} = req.body;
 
       sendTelegramMessage({ roomId, comments });
