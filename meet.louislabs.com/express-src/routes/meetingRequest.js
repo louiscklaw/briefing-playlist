@@ -9,6 +9,13 @@ let MEET_BASEURL = process.env.MEET_BASEURL;
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 
+const MESSAGE_TEMPLATE=`
+incoming meeting request !
+
+__MEET_BASEURL__/__roomId__
+
+`.strip()
+
 function sendTelegramMessage({ roomId }) {
   try {
     console.log('sendTelegramMessage');
@@ -17,7 +24,14 @@ function sendTelegramMessage({ roomId }) {
       TELEGRAM_CHATID,
       roomId });
 
-    bot.sendMessage(TELEGRAM_CHATID, `${MEET_BASEURL}/${roomId}`);
+    // bot.sendMessage(TELEGRAM_CHATID,
+    //   `${MEET_BASEURL}/${roomId}`
+    //   );
+    bot.sendMessage(TELEGRAM_CHATID,
+      MESSAGE_TEMPLATE
+        .replace('__MEET_BASEURL__', MEET_BASEURL)
+        .replace('__roomId__', roomId)
+      );
   } catch (error) {
     console.log(error)
     throw error
