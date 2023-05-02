@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div style="margin-bottom: 1rem;">
+    <h2>localhost:3000/meetingRequest/r/req_from_portfolio</h2>
+    <div>
+      <button id="test_meeting_request_from_portfolio">test_meeting_request_from_portfolio</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <h2>localhost:3000/meetingRequest/r/req_from_carousell</h2>
+    <div>
+      <button id="test_req_from_carousell">test_req_from_carousell</button>
+    </div>
+  </div>
+
+  <div style="border: 1px solid red">
+    <h2>localhost:3000/meetingRequest/r/helloworld_room</h2>
+    <div>
+      <button id="helloworld_test">helloworld_test</button>
+    </div>
+    <div>
+      <h2>Expected:</h2>
+      <div>should receive in telegram:
+<pre>
+incoming meeting request !
+
+https://meet.louislabs.com/helloworld_room
+
+incomint meeting request from portfolio
+</pre>
+        </div>
+    </div>
+  </div>
+
+  <div>
+    <h2>helloworld</h2>
+    <div>
+      <button id="helloworld">helloworld</button>
+    </div>
+  </div>
+
+  <!-- <script src="script.js"></script> -->
+  <!-- <script src="click_to_post.js"></script> -->
+
+  <script src="helloworld_test.js"></script>
+  <script src="test_meeting_request_from_portfolio.js"></script>
+
+  <!-- <script src="helloworld.js"></script> -->
+
+</body>
+</html>
