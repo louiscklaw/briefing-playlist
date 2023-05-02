@@ -2,6 +2,8 @@
 
 set -x
 
+git pull
+
 pushd briefing-src-cust
   npm i -D
   ./build.sh
