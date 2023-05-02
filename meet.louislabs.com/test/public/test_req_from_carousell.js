@@ -18,11 +18,11 @@ async function postData(url = "", data = {}) {
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  document.querySelector('#test_meeting_request_from_portfolio').addEventListener('click', () =>{
-    postData("//localhost:3000/meetingRequest/r/req_from_portfolio",
+  document.querySelector('#test_req_from_carousell').addEventListener('click', () =>{
+    postData("//localhost:3000/meetingRequest/r/req_from_carousell",
     { comments:
 `
-incomint meeting request from portfolio
+incomint meeting request from carousell
 🍊
 `.trim()
     }
