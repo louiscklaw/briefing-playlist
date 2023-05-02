@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     postData("//localhost:3000/meetingRequest/r/helloworld_room",
       { comments:
 `
-incomint meeting request from portfolio
+incoming meeting request from portfolio
 `.trim()
       }
       ).then((data) => {

@@ -10,8 +10,8 @@ services:
   express:
     image: docker.io/bitnami/express:4
     restart: always
-    # ports:
-    #   - '3000:3000'
+    ports:
+      - '3000:3000'
     environment:
       - PORT=3000
       - NODE_ENV=development
@@ -45,8 +45,8 @@ services:
     build: ./briefing-src-cust
     restart: always
 
-    # ports:
-    #   - 8080:8080
+    ports:
+      - 8080:8080
     working_dir: /app
     command: ./entry.sh
 
@@ -67,6 +67,15 @@ services:
 
     depends_on:
       - express
+
+  test-site:
+    build: test
+    volumes:
+      - ./test:/app
+    working_dir: /app
+    ports:
+      - 3001:8080
+    command: ./entry.sh
 
 networks:
   default:

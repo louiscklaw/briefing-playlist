@@ -15,3 +15,13 @@ cd meet.louislabs.com
 ### test page
 
 meet.louislabs.com/test/index.html
+
+
+## docker
+
+### rebuild
+```bash
+
+# to rebuild test-site docker only
+./test/rebuild_docker.sh
+```

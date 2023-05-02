@@ -13,7 +13,7 @@ const ERR_CANNOT_FIND_COMMENT_IN_POST_REQUEST = 'ERR_CANNOT_FIND_COMMENT_IN_POST
 
 const MESSAGE_TEMPLATE=`
 incoming meeting request !
-
+time: __TIME__
 __MEET_BASEURL__/__roomId__
 
 __comments__
@@ -28,16 +28,26 @@ function sendTelegramMessage({ roomId, comments="" }) {
       TELEGRAM_CHATID,
       roomId });
 
+    var now = new Date();
+    var options = {
+      timeZone: 'Asia/Singapore', hour12: false,
+      month: 'long', day: 'numeric', hour:"numeric", minute:"numeric",second:"numeric" };
+
     // bot.sendMessage(TELEGRAM_CHATID,
     //   `${MEET_BASEURL}/${roomId}`
     //   );
     bot.sendMessage(TELEGRAM_CHATID,
       MESSAGE_TEMPLATE
         .replace('__MEET_BASEURL__', MEET_BASEURL)
+        .replace('__TIME__', now.toLocaleDateString('zh-HK', options))
         .replace('__roomId__', roomId)
         .replace('__comments__', comments)
-        .trim()
+        .trim(),
+        {
+          disable_web_page_preview: true
+        }
       );
+
   } catch (error) {
     console.log(error)
     throw error

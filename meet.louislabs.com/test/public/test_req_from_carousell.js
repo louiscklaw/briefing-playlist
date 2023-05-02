@@ -22,8 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     postData("//localhost:3000/meetingRequest/r/req_from_carousell",
     { comments:
 `
-incomint meeting request from carousell
-🍊
+incoming meeting request from carousell 🍊
 `.trim()
     }
     ).then((data) => {
