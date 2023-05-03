@@ -35,7 +35,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.meetapi-louislabs-http.rule=Host(`meetapi.louislabs.com`)'
       - 'traefik.http.routers.meetapi-louislabs-http.entrypoints=web'
-      - 'traefik.http.routers.meetapi-louislabs-http.middlewares=meetapi-https'
+      - 'traefik.http.routers.meetapi-louislabs-http.middlewares=meetapi-louislabs-https'
       - 'traefik.http.middlewares.meetapi-louislabs-https.redirectscheme.scheme=https'
 
       - 'traefik.http.routers.meetapi-louislabs-https.rule=Host(`meetapi.louislabs.com`)'
@@ -60,7 +60,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.meet-louislabs-http.rule=Host(`meet.louislabs.com`)'
       - 'traefik.http.routers.meet-louislabs-http.entrypoints=web'
-      - 'traefik.http.routers.meet-louislabs-http.middlewares=meet-https'
+      - 'traefik.http.routers.meet-louislabs-http.middlewares=meet-louislabs-https'
       - 'traefik.http.middlewares.meet-louislabs-https.redirectscheme.scheme=https'
 
       - 'traefik.http.routers.meet-louislabs-https.rule=Host(`meet.louislabs.com`)'
