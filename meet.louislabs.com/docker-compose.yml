@@ -10,8 +10,8 @@ services:
   express:
     image: docker.io/bitnami/express:4
     restart: always
-    # ports:
-      # - '3000:3000'
+    # expose:
+    #   - 3000
     environment:
       - PORT=3000
       - NODE_ENV=development
@@ -27,78 +27,43 @@ services:
     env_file:
       - ./.env
     command: './entry.sh'
-
-    expose:
-      - 3000
-
     labels:
-      # TODO: 2023-Jul-12, remove me as no encrypted traffic between cloudflare and my server anymore.
-      # - 'traefik.enable=true'
-      # - 'traefik.http.routers.meetapi-louislabs-http.rule=Host(`meetapi.louislabs.com`)'
-      # - 'traefik.http.routers.meetapi-louislabs-http.entrypoints=web'
-      # - 'traefik.http.routers.meetapi-louislabs-http.middlewares=meetapi-louislabs-https'
-      # - 'traefik.http.middlewares.meetapi-louislabs-https.redirectscheme.scheme=https'
-
-      # - 'traefik.http.routers.meetapi-louislabs-https.rule=Host(`meetapi.louislabs.com`)'
-      # - 'traefik.http.routers.meetapi-louislabs-https.entrypoints=websecure'
-      # - 'traefik.http.routers.meetapi-louislabs-https.tls.certresolver=myresolver'
-      # - 'traefik.http.services.meetapi-louislabs-https.loadbalancer.server.port=3000'
-
       - "traefik.enable=true"
-
       - "traefik.http.routers.meetapi-louislabs.rule=Host(`meetapi.louislabs.com`)"
       - "traefik.http.routers.meetapi-louislabs.entrypoints=web"
-
-      # NOTE: container serving 8080 port
       - "traefik.http.services.meetapi-louislabs.loadbalancer.server.port=3000"
 
-
   briefing:
+    # image: holtwick/briefing
     build: ./briefing-src-cust
     restart: always
-
     # ports:
     #   - 8080:8080
+    env_file: .env
     working_dir: /app
     command: ./entry.sh
-
-    env_file:
-      - ./.env
-
+    # command: sleep infinity
     labels:
-      # TODO: 2023-Jul-12, remove me as no encrypted traffic between cloudflare and my server anymore.
-      # - 'traefik.enable=true'
-      # - 'traefik.http.routers.meet-louislabs-http.rule=Host(`meet.louislabs.com`)'
-      # - 'traefik.http.routers.meet-louislabs-http.entrypoints=web'
-      # - 'traefik.http.routers.meet-louislabs-http.middlewares=meet-louislabs-https'
-      # - 'traefik.http.middlewares.meet-louislabs-https.redirectscheme.scheme=https'
-
-      # - 'traefik.http.routers.meet-louislabs-https.rule=Host(`meet.louislabs.com`)'
-      # - 'traefik.http.routers.meet-louislabs-https.entrypoints=websecure'
-      # - 'traefik.http.routers.meet-louislabs-https.tls.certresolver=myresolver'
-      # - 'traefik.http.services.meet-louislabs-https.loadbalancer.server.port=8080'
-
       - "traefik.enable=true"
-
-      - "traefik.http.routers.meet-louislabs.rule=Host(`meet.louislabs.com`)"
-      - "traefik.http.routers.meet-louislabs.entrypoints=web"
-
-      # NOTE: container serving 8080 port
-      - "traefik.http.services.meet-louislabs.loadbalancer.server.port=8080"
+      - "traefik.http.routers.meet-louislabs-http.rule=Host(`meet.louislabs.com`)"
+      - "traefik.http.routers.meet-louislabs-http.entrypoints=web"
+      - "traefik.http.services.meet-louislabs-http.loadbalancer.server.port=8080"
 
     depends_on:
       - express
 
-  test-site:
-    build: test
-    volumes:
-      - ./test:/app
-    working_dir: /app
-    ports:
-      - 8080
-    command: ./entry.sh
+  # whoami-iamon99:
+  #   image: 'traefik/whoami'
+  #   restart: unless-stopped
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.apple-iamon99-http.rule=Host(`apple.iamon99.com`)"
+  #     - "traefik.http.routers.apple-iamon99-http.entrypoints=web"
+
+  #     # NOTE: container serving 80 port
+  #     - "traefik.http.services.apple-iamon99-http.loadbalancer.server.port=80"
 
 networks:
   default:
-    external:
-      name: traefik-proxy-network
+    name: traefik-proxy-network
+    external: true
